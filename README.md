@@ -312,6 +312,10 @@ By default, the network security groups connected to subnets will block all traf
 
 In the example below, the Source and Destination columns have the values `VirtualNetwork`, `AzureLoadBalancer`, and `Internet`. These are service tags rather than IP addresses. In the protocol column, `Any` encompasses `TCP`, `UDP`, and `ICMP`. When creating a rule, you can specify `TCP`, `UDP`, `ICMP` or `*` for the protocol. Providing a `0.0.0.0/0` in the Source or Destination columns represents all addresses.
 
+> For more information on the subnet NSG rule structure, see the [Azurerm NSG Terraform documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group#security_rule).
+
+```hcl
+
 *You cannot remove the default rules, but you can override them by creating rules with higher priorities.*
 
 ```hcl
@@ -327,18 +331,18 @@ module "vnet-spoke" {
       subnet_name           = "default"
       subnet_address_prefix = "10.1.2.0/24"
       nsg_subnet_inbound_rules = [
-        # [name, description, priority, direction, access, protocol, destination_port_range, source_address_prefixes, destination_address_prefix]
+        # [name, description, priority, direction, access, protocol, source_port_ranges, destination_port_ranges, source_address_prefix, source_address_prefixes, destination_address_prefix, destination_address_prefixes]
         # Use "" for description to use default description
         # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-        ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", "200", "Inbound", "Allow", "*", ["22", "80", "443", "3389"], ["10.8.8.0/24"], [""]],
-        ["weballow", "", "200", "Inbound", "Allow", "Tcp", "22", "*", ""],
-        ["weballow1", "", "201", "Inbound", "Allow", "Tcp", "3389", "*", ""],
+        ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", 200, "Inbound", "Allow", "*", [], ["22", "80", "443", "3389"], "", ["10.8.8.0/24"], "*", [] ],
+        ["weballow", "", 300, "Inbound", "Allow", "Tcp", [], ["22"], "*", [], "", [] ],
+        ["weballow1", "", "301", "Inbound", "Allow", "Tcp", [], ["3389"], "*", [], "", [] ],
       ]
 
       nsg_subnet_outbound_rules = [
-        # [name, priority, direction, access, protocol, destination_port_range, source_address_prefix, destination_address_prefix]
+        # [name, description, priority, direction, access, protocol, source_port_ranges, destination_port_ranges, source_address_prefix, source_address_prefixes, destination_address_prefix, destination_address_prefixes]
         # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-        ["ntp_out", "", "103", "Outbound", "Allow", "Udp", "123", "", "0.0.0.0/0"],
+        ["ntp_out", "", 103, "Outbound", "Allow", "Udp", [], ["123"], "", [], "0.0.0.0/0", [] ],
       ]
     }
   }

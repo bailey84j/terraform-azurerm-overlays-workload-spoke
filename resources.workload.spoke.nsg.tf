@@ -17,9 +17,12 @@ resource "azurerm_network_security_group" "nsg" {
       access                       = security_rule.value[4] == "" ? "Allow" : security_rule.value[4]
       protocol                     = security_rule.value[5] == "" ? "Tcp" : security_rule.value[5]
       source_port_range            = "*"
-      destination_port_ranges      = security_rule.value[6] == [""] ? ["*"] : security_rule.value[6]
-      source_address_prefixes      = security_rule.value[7] == [""] ? each.value.address_prefixes : security_rule.value[7]
-      destination_address_prefixes = security_rule.value[8] == [""] ? each.value.address_prefixes : security_rule.value[8]      
+      source_port_ranges           = security_rule.value[6] == [""] ? each.value.address_prefixes : security_rule.value[6]
+      destination_port_ranges      = security_rule.value[7] == [""] ? ["*"] : security_rule.value[7]
+      source_address_prefix        = security_rule.value[8] == [""] ? "" : security_rule.value[8]
+      source_address_prefixes      = security_rule.value[9] == [""] ? each.value.address_prefixes : security_rule.value[9]
+      destination_address_prefix   = security_rule.value[10] == [""] ? "" : security_rule.value[10]
+      destination_address_prefixes = security_rule.value[11] == [""] ? each.value.address_prefixes : security_rule.value[11]
     }
   }
 }
