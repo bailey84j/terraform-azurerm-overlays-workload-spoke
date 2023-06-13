@@ -312,6 +312,10 @@ By default, the network security groups connected to subnets will block all traf
 
 In the example below, the Source and Destination columns have the values `VirtualNetwork`, `AzureLoadBalancer`, and `Internet`. These are service tags rather than IP addresses. In the protocol column, `Any` encompasses `TCP`, `UDP`, and `ICMP`. When creating a rule, you can specify `TCP`, `UDP`, `ICMP` or `*` for the protocol. Providing a `0.0.0.0/0` in the Source or Destination columns represents all addresses.
 
+> For more information on the subnet NSG rule structure, see the [Azurerm NSG Terraform documentation](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group#security_rule).
+
+```hcl
+
 *You cannot remove the default rules, but you can override them by creating rules with higher priorities.*
 
 ```hcl
