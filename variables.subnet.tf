@@ -68,3 +68,4 @@ variable "spoke_subnets" {
       destination_application_security_group_ids = optional(list(string))
     })))
   }))
+}
