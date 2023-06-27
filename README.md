@@ -183,7 +183,7 @@ Parameter name | Location | Default Value | Description
 
 This module handles the creation of subnets on the new virtual network.  The user passes a list of CIDR address spaces for the subnets. This module then uses a `for_each` to iterate over the list of CIDR addresses to create the requested subnets and corresponding service endpoints, service delegation, and network security groups. This module associates the subnets to network security groups which can also contain additional user-defined NSG rules.  
 
-The module always adds a Default Subnet to the virtual network. The module has a set of variables for the Default Subnet configuration and a separate set of variables for any additional subnets needed.
+The module does not create a Default Subnet within the virtual network. The user must pass in the data for all subnets that are needed within the Spoke vnet.
 
 ## Virtual Network service endpoints
 
@@ -308,7 +308,7 @@ module "vnet-spoke" {
 ```
 ## Network Security Groups
 
-By default, the network security groups connected to subnets will block all traffic (deny-all rule). Use the `nsg_subnet_inbound_rules` and `nsg_subnet_outbound_rules` variables in this Terraform module to modify the Network Security Group (NSG) for each subnet with additional rules for inbound and outbound traffic (respectively).
+By default, the network security groups connected to subnets will block all traffic (deny-all rule). Use the `nsg_subnet_rules` variable in this Terraform module to modify the Network Security Group (NSG) for each subnet with additional rules for inbound and outbound traffic.
 
 In the example below, the Source and Destination columns have the values `VirtualNetwork`, `AzureLoadBalancer`, and `Internet`. These are service tags rather than IP addresses. In the protocol column, `Any` encompasses `TCP`, `UDP`, and `ICMP`. When creating a rule, you can specify `TCP`, `UDP`, `ICMP` or `*` for the protocol. Providing a `0.0.0.0/0` in the Source or Destination columns represents all addresses.
 
@@ -330,21 +330,33 @@ module "vnet-spoke" {
     default = {
       subnet_name           = "default"
       subnet_address_prefix = "10.1.2.0/24"
-      nsg_subnet_inbound_rules = [
-        # [name, description, priority, direction, access, protocol, source_port_ranges, destination_port_ranges, source_address_prefix, source_address_prefixes, destination_address_prefix, destination_address_prefixes]
-        # Use "" for description to use default description
-        # To use defaults, use [""] without adding any value and to use this subnet as a source or destination prefix.      
-        ["Allow-Traffic-From-Spokes", "Allow traffic from spokes", 200, "Inbound", "Allow", "*", [], ["22", "80", "443", "3389"], "", ["10.8.8.0/24"], "*", [] ],
-        ["weballow", "", 300, "Inbound", "Allow", "Tcp", [], ["22"], "*", [], "", [] ],
-        ["weballow1", "", "301", "Inbound", "Allow", "Tcp", [], ["3389"], "*", [], "", [] ],
-      ]
-
-      nsg_subnet_outbound_rules = [
-        # [name, description, priority, direction, access, protocol, source_port_ranges, destination_port_ranges, source_address_prefix, source_address_prefixes, destination_address_prefix, destination_address_prefixes]
-        # To use defaults, use "" without adding any value and to use this subnet as a source or destination prefix.
-        ["ntp_out", "", 103, "Outbound", "Allow", "Udp", [], ["123"], "", [], "0.0.0.0/0", [] ],
-      ]
-    }
+    nsg_subnet_rules = [
+      # Docs for the Security Rule block can be found at https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/network_security_group#security_rule 
+      {
+        name                       = "allow-web-apps",
+        description                = "Allow access to ports 80 & 443 for applications",
+        priority                   = 100,
+        direction                  = "Inbound",
+        access                     = "Allow",
+        protocol                   = "Tcp",
+        source_port_range          = "*",
+        destination_port_ranges    = ["80", "443"],
+        source_address_prefix      = "*",
+        destination_address_prefix = "*"
+      },
+      {
+        name                       = "allow-ssh",
+        description                = "Allow access to ports 22 for vm access",
+        priority                   = 200,
+        direction                  = "Inbound",
+        access                     = "Allow",
+        protocol                   = "*Tcp*",
+        source_port_range          = "*",
+        destination_port_range    = "22",
+        source_address_prefix      = "*",
+        destination_address_prefix = "*"      
+      }
+    ]
   }
 
 # ....omitted
