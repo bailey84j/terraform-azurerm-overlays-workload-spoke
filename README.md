@@ -308,7 +308,7 @@ module "vnet-spoke" {
 ```
 ## Network Security Groups
 
-By default, the network security groups connected to subnets will block all traffic (deny-all rule). Use the `nsg_subnet_rules` variable in this Terraform module to modify the Network Security Group (NSG) for each subnet with additional rules for inbound and outbound traffic.
+By default, the network security groups connected to subnets will not block all traffic. Use the `nsg_subnet_inbound_rules` and `nsg_subnet_outbound_rules` variables in this Terraform module to modify the Network Security Group (NSG) for each subnet with additional rules for inbound and outbound traffic (respectively).
 
 In the example below, the Source and Destination columns have the values `VirtualNetwork`, `AzureLoadBalancer`, and `Internet`. These are service tags rather than IP addresses. In the protocol column, `Any` encompasses `TCP`, `UDP`, and `ICMP`. When creating a rule, you can specify `TCP`, `UDP`, `ICMP` or `*` for the protocol. Providing a `0.0.0.0/0` in the Source or Destination columns represents all addresses.
 
@@ -366,6 +366,7 @@ module "vnet-spoke" {
 
 To peer spoke virtual networks to the hub virtual network requires the service principal that performs the peering to have the `Network Contributor` role on the hub virtual network. When linking the Spoke to the Hub DNS zones, the service principal also needs the `Private DNS Zone Contributor` role on the hub virtual network. If a Log Analytics workspace was created in the hub or another subscription then the service principal must also have the `Log Analytics Contributor` role on the workspace or a custom role to connect the new resources to the workspace.
 
+> NOTE: This module will add the `Network Contributor` role and `Private DNS Zone Contributor` role, if you are using DNS Zones as part of the deployment.
 
 ## Create resource group
 
