@@ -11,7 +11,7 @@ resource "azurerm_network_security_group" "nsg" {
   tags                = merge({ "ResourceName" = lower("nsg_${each.key}") }, local.default_tags, var.add_tags, )
   
 dynamic "security_rule" {
-    for_each = each.value["nsg_subnet_rules"]
+    for_each = each.value.nsg_subnet_rules != null ? each.value.nsg_subnet_rules : []
 
     content {
       name        = security_rule.value["name"]
