@@ -37,13 +37,19 @@ output "virtual_network_address_space" {
 }
 
 output "subnet_ids" {
-  description = "List of IDs of subnets"
-  value       = flatten(concat([for s in azurerm_subnet.default_snet : s.id]))
+  description = "Map of IDs of subnets"
+  value = { for key, name in zipmap(
+    sort(keys(var.spoke_subnets)),
+    sort(values(azurerm_subnet.default_snet)[*]["id"])) :
+  key => { key = key, name = name } }
 }
 
-output "subnet_ids_names" {
-  description = "List of IDs of subnets with names"
-  value       = flatten(concat([for s in azurerm_subnet.default_snet : s.id]))
+output "subnet_names" {
+  description = "Map of names of subnets"
+  value = { for key, name in zipmap(
+    sort(keys(var.spoke_subnets)),
+    sort(values(azurerm_subnet.default_snet)[*]["name"])) :
+  key => { key = key, name = name } }
 }
 
 output "subnet_address_prefixes" {
@@ -53,8 +59,19 @@ output "subnet_address_prefixes" {
 
 # Network Security group ids
 output "network_security_group_ids" {
-  description = "List of Network security groups and ids"
-  value       = [for n in azurerm_network_security_group.nsg : n.id]
+  description = "Map of ids for default NSGs"
+  value = { for key, id in zipmap(
+    sort(keys(var.spoke_subnets)),
+    sort(values(azurerm_network_security_group.nsg)[*]["id"])) :
+  key => { key = key, id = id } }
+}
+
+output "network_security_group_names" {
+  description = "Map of names for default NSGs"
+  value = { for key, name in zipmap(
+    sort(keys(var.spoke_subnets)),
+    sort(values(azurerm_network_security_group.nsg)[*]["name"])) :
+  key => { key = key, name = name } }
 }
 
 # DDoS Protection Plan
