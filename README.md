@@ -4,10 +4,7 @@
 
 This Overlay terraform module deploys a Workload Spoke which is comprised of a virtual network and associated subnets following the [Microsoft recommended Hub-Spoke network topology](https://docs.microsoft.com/en-us/azure/architecture/reference-architectures/hybrid-networking/hub-spoke) and conforming to the architecture of an [SCCA compliant Management Hub Network](https://registry.terraform.io/modules/azurenoops/overlays-management-hub/azurerm/latest). This module can be used to create a Spoke in the same region as its Hub or it can be deployed to a different Azure region.  You can deploy it into the same subscription as the Hub or select a different one.
 
-
->If you are deploying the spoke virtual network into the same subscription as the Hub virtual network, then you must set the `is_spoke_deployed_to_same_hub_subscription` argument to `true`. This allows the module to manage the network watcher, flow logs and traffic analytics resources for the subnets deployed in the spoke virtual network. If you are deploying the spoke virtual network in a subscriptions that does not contain the Hub virtual network, then set the `is_spoke_deployed_to_same_hub_subscription` argument to `false`.
-
-This is designed to quickly deploy a workload spoke into an existing SCCA-compliant hub and spoke architecture in Azure. We recommend additional security hardening be applied to the network security group (NSG) deployed based on the security needs of the workload you are adding to this spoke.   
+This is designed to quickly deploy a workload spoke into an existing SCCA-compliant hub and spoke architecture in Azure. We recommend additional security hardening be applied to the network security group (NSG) deployed based on the security needs of the workload you are adding to this spoke.
 
 ## Using Different Azure Clouds
 
@@ -129,9 +126,6 @@ module "vnet-wl-spoke" {
   # Provide valid VNet Address space for spoke virtual network.    
   virtual_network_address_space = ["10.0.100.0/24"] # (Required)  Hub Virtual Network Parameters
    
-  # (Required) Specify if you are deploying the spoke VNet using the same hub Azure subscription
-  is_spoke_deployed_to_same_hub_subscription = true  
-
   # (Required) Multiple Subnets, Service delegation, Service Endpoints, Network security groups
   # These are default subnets with required configuration, check README.md for more details
   # Route_table and NSG association to be added automatically for all subnets listed here.

@@ -65,7 +65,7 @@ output "ddos_protection_plan_id" {
 
 output "network_watcher_id" {
   description = "ID of Network Watcher"
-  value       = var.is_spoke_deployed_to_same_hub_subscription == false ? element(concat(azurerm_network_watcher.nwatcher.*.id, [""]), 0) : null
+  value       = data.azurerm_resource_group.netwatch
 }
 
 output "route_table_name" {
