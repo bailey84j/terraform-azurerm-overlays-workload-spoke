@@ -1,12 +1,10 @@
-# Azurerm provider configuration
-provider "azurerm" {
-  features {}
-}
+# Copyright (c) Microsoft Corporation.
+# Licensed under the MIT License.
 
 module "mod_vnet_spoke" {
   #source  = "azurenoops/overlays-workload-spoke/azurerm"
   #version = "~> x.x.x"
-  source = "../.."
+  source = "../../.."
 
   # By default, this module will create a resource group, provide the name here
   # To use an existing resource group, specify the existing resource group name, 
