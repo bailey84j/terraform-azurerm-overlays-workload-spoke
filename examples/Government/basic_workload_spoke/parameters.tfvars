@@ -20,20 +20,20 @@ enable_resource_locks = false # true | false
 # By default, this will enable flow logs traffic analytics for all subnets.
 enable_traffic_analytics = true
 
-#################################################
-# Identity Management Spoke Virtual Network   ###
-#################################################
+######################################
+# Workload Spoke Virtual Network   ###
+######################################
 
 # Enable Identity Management Spoke Virtual Network
 # If you do not want to create Identity Management Spoke Virtual Network,
 # remove this section from the configuration file.
 
 # Identity Virtual Network Parameters
-id_name               = "id"
+id_name               = "wl"
 id_vnet_address_space = ["10.8.9.0/24"]
 id_subnets = {
   default = {
-    name                                       = "id"
+    name                                       = "wl"
     address_prefixes                           = ["10.8.9.224/27"]
     service_endpoints                          = ["Microsoft.Storage"]
     private_endpoint_network_policies_enabled  = false
