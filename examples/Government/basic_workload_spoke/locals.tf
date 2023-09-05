@@ -1,7 +1,7 @@
 locals {
   tags = {    
-    Module  = "overlays-management-spoke"
+    Module  = "overlays-workoad-spoke"
     Toolkit = "Terraform"
-    Example = "Management Spoke"
+    Example = "Workload Spoke"
   }
 }
