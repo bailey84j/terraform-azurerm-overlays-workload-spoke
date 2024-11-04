@@ -16,6 +16,6 @@ variable "spoke_storage_account_tier" {
 variable "spoke_storage_account_replication_type" {
   description = "The Replication Type of storage account to create. Valid options are LRS, GRS, RAGRS, ZRS, GZRS, RAGZRS."
   type        = string
-  default     = "GRS"
+  default     = "GZRS"
 }
 
