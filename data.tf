@@ -10,7 +10,16 @@ data "azurerm_resource_group" "netwatch" {
 }
 
 data "azurerm_virtual_network" "hub_vnet" {
+  count = var.vwan_enabled == false ? 1 : 0
   provider            = azurerm.hub_network
   name                = var.hub_virtual_network_name
   resource_group_name = var.hub_resource_group_name
+}
+
+data "azurerm_virtual_hub" "hub" {
+  count = var.vwan_enabled == true ? 1 : 0
+  provider            = azurerm.hub_network
+  name = var.hub_virtual_network_name
+  resource_group_name = var.hub_resource_group_name
+
 }

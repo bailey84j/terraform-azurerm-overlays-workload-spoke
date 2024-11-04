@@ -362,6 +362,27 @@ To peer spoke virtual networks to the hub virtual network requires the service p
 
 > NOTE: This module will add the `Network Contributor` role and `Private DNS Zone Contributor` role, if you are using DNS Zones as part of the deployment.
 
+## Peering to the VWAN Hub
+
+```hcl
+module "vnet-spoke" {
+  source  = "azurenoops/overlays-Workload-spoke/azurerm"
+  version = "x.x.x"
+
+  # .... omitted
+
+  # Hub virtual network name and resource group are inter-changeable for the VWAN hub name and resource group
+  hub_virtual_network_name = "${var.root_id}-hub-${var.region}"
+  hub_resource_group_name = "${var.root_id}-connectivity"
+
+  # Enables module to use vWan hub rather than hub and spoke
+  vwan_enabled = true
+
+# ....omitted
+
+}
+```
+
 ## Create resource group
 
 By default, this module will create a new resource group. You provide the name of the new resource group in the `resource_group_name` argument. If you want to use an existing resource group thenyou would pass the name of the existing resource group in the `resource_group~name` argument and also set the `create_resource_group` argument to `false`.

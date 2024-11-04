@@ -16,9 +16,9 @@ variable "route_table_routes" {
   default = {}
 }
 
-variable "disable_bgp_route_propagation" {
+variable "bgp_route_propagation_enabled" {
   description = "Whether to disable the default BGP route propagation on the subnet"
-  default     = true
+  default     = false
 }
 
 variable "enable_forced_tunneling_on_route_table" {

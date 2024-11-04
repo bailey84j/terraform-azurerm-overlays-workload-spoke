@@ -127,3 +127,13 @@ variable "log_analytics_logs_retention_in_days" {
   description = "The log analytics workspace data retention in days. Possible values range between 30 and 730."
   default     = ""
 }
+
+
+#####################################
+# VWAN Configuration   ##
+#####################################
+
+variable "vwan_enabled" {
+  description = "Enable VWAN Hub vs Traditional Hub and Spoke"
+  default     = false
+}
