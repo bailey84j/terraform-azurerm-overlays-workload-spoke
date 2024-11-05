@@ -63,3 +63,24 @@ data "azurenoopsutils_resource_name" "ddos" {
   clean_input   = true
   separator     = "-"
 }
+
+
+data "azurenoopsutils_resource_name" "mag" {
+  name          = var.workload_name
+  resource_type = "azurerm_monitor_action_group"
+  prefixes      = [var.org_name, var.use_location_short_name ? module.mod_azregions.location_short : module.mod_azregions.location_cli]
+  suffixes      = compact([var.name_prefix == "" ? null : local.name_prefix, var.deploy_environment, local.name_suffix, var.use_naming ? "" : "mag"])
+  use_slug      = var.use_naming
+  clean_input   = true
+  separator     = "-"
+}
+
+data "azurenoopsutils_resource_name" "mag_rg" {
+  name          = var.workload_name
+  resource_type = "azurerm_resource_group"
+  prefixes      = [var.org_name, var.use_location_short_name ? module.mod_azregions.location_short : module.mod_azregions.location_cli]
+  suffixes      = compact([var.name_prefix == "" ? null : local.name_prefix, var.deploy_environment, local.name_suffix, var.use_naming ? "mag" : "mag-rg"])
+  use_slug      = var.use_naming
+  clean_input   = true
+  separator     = "-"
+}
