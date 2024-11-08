@@ -7,7 +7,7 @@
 # Peering between Hub and Spoke Virtual Network
 #-----------------------------------------------
 resource "azurerm_virtual_network_peering" "spoke_to_hub" {
-  count = var.vwan_enabled == false ? 1 : 0
+  count                        = var.vwan_enabled == false ? 1 : 0
   name                         = lower("peering-${var.workload_name}-spoke-to-${data.azurerm_virtual_network.hub_vnet[0].name}")
   resource_group_name          = local.resource_group_name
   virtual_network_name         = azurerm_virtual_network.spoke_vnet.name
@@ -19,7 +19,7 @@ resource "azurerm_virtual_network_peering" "spoke_to_hub" {
 }
 
 resource "azurerm_virtual_network_peering" "hub_to_spoke" {
-  count = var.vwan_enabled == false ? 1 : 0
+  count                        = var.vwan_enabled == false ? 1 : 0
   provider                     = azurerm.hub_network
   name                         = lower("peering-${data.azurerm_virtual_network.hub_vnet[0].name}-to-${var.workload_name}-spoke")
   resource_group_name          = data.azurerm_virtual_network.hub_vnet[0].resource_group_name
@@ -33,8 +33,8 @@ resource "azurerm_virtual_network_peering" "hub_to_spoke" {
 
 
 resource "azurerm_virtual_hub_connection" "vwan_to_spoke" {
-  count = var.vwan_enabled == true ? 1 : 0
-    name = lower("peering-${var.workload_name}-vwan-${data.azurerm_virtual_hub.hub[0].name}")
-    virtual_hub_id = data.azurerm_virtual_hub.hub[0].id
-    remote_virtual_network_id = azurerm_virtual_network.spoke_vnet.id
+  count                     = var.vwan_enabled == true ? 1 : 0
+  name                      = lower("peering-${var.workload_name}-vwan-${data.azurerm_virtual_hub.hub[0].name}")
+  virtual_hub_id            = data.azurerm_virtual_hub.hub[0].id
+  remote_virtual_network_id = azurerm_virtual_network.spoke_vnet.id
 }
